@@ -1,0 +1,39 @@
+   <!DOCTYPE html>
+   <html lang="en">
+   <head>
+       <meta charset="UTF-8">
+       <meta name="viewport" content="width=device-width, initial-scale=1.0">
+       <title>Utilitarianism - DaleGPT</title>
+       <link rel="stylesheet" href="styles.css">
+   </head>
+   <body>
+       <header>
+           <h1>Utilitarian Model</h1>
+           <p>Input your decision scenario below:</p>
+       </header>
+       <main>
+           <form id="scenarioForm">
+               <textarea id="scenarioInput" placeholder="Enter your decision scenario here..." required></textarea>
+               <button type="submit">Submit</button>
+           </form>
+           <div id="response"></div>
+       </main>
+       <script>
+           document.getElementById('scenarioForm').addEventListener('submit', async (e) => {
+               e.preventDefault();
+               const scenario = document.getElementById('scenarioInput').value;
+               const responseDiv = document.getElementById('response');
+
+               const res = await fetch('/api/utilitarianism', {
+                   method: 'POST',
+                   headers: {
+                       'Content-Type': 'application/json',
+                   },
+                   body: JSON.stringify({ scenario }),
+               });
+               const data = await res.json();
+               responseDiv.innerText = data.response;
+           });
+       </script>
+   </body>
+   </html>

@@ -1,0 +1,62 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DaleGPT Assistant</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <h1>DaleGPT Decision-Making Assistant</h1>
+        <p>Based on your top values, let's help you make a decision!</p>
+    </header>
+    <main>
+        <div id="topValues"></div>
+        <form id="decisionForm">
+            <h2>Describe Your Decision Scenario</h2>
+            <textarea id="decisionInput" placeholder="What decision are you facing?" required></textarea>
+            <button type="submit">Get Advice</button>
+        </form>
+        <div id="advice"></div>
+    </main>
+<script>
+    // Get the top values from the URL parameters
+    const urlParams = new URLSearchParams(window.location.search);
+    const topValues = urlParams.get('values');
+
+    // Display the top values
+    document.getElementById('topValues').innerHTML = `<h3>Your Top Values:</h3><p>${topValues || 'No values found'}</p>`;
+
+    document.getElementById('decisionForm').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const decisionScenario = document.getElementById('decisionInput').value;
+        const adviceDiv = document.getElementById('advice');
+        
+        try {
+            const response = await fetch('/api/virtue-ethics', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    scenario: decisionScenario,
+                    values: topValues
+                }),
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                adviceDiv.innerHTML = `<p>${data.response}</p>`;
+            } else {
+                adviceDiv.innerHTML = '<p>Error: Unable to get advice.</p>';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            adviceDiv.innerHTML = '<p>Error: Unable to get advice.</p>';
+        }
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Virtue Ethics - DaleGPT</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav>
+        <h1>DaleGPT</h1>
+        <ul>
+            <li><a href="virtue-ethics.html">Home</a></li>
+            <li><a href="dale-gpt-assistant.html">Assistant</a></li>
+            <li><a href="#">About</a></li>
+            <li><a href="#">Contact</a></li>
+        </ul>
+    </nav>
+    <header>
+        <h1>Welcome to DaleGPT's Virtue Ethics Assistant</h1>
+        <p>To assist you with your query, please share your top five values when making decisions.</p>
+    </header>
+    <main>
+        <form id="dilemmaForm">
+            <h2>Ethical Dilemma 1: Corporate Downsizing</h2>
+            <p>You are a leader at a company facing financial difficulties. The company must decide whether to lay off 20% of its workforce to keep the rest employed. What values guide your decision-making?</p>
+            <textarea id="dilemma1" placeholder="Your response..." required></textarea>
+
+            <h2>Ethical Dilemma 2: Reporting Unethical Behavior</h2>
+            <p>You notice a colleague engaging in unethical behavior, such as falsifying reports. Reporting this could harm their career. How would you handle this situation?</p>
+            <textarea id="dilemma2" placeholder="Your response..." required></textarea>
+
+            <h2>Ethical Dilemma 3: Environmental Sustainability vs. Profit</h2>
+            <p>You can cut costs by using cheaper, less environmentally-friendly materials. This would boost profits but harm the environment. How would you approach this decision?</p>
+            <textarea id="dilemma3" placeholder="Your response..." required></textarea>
+
+            <button type="submit">Submit</button>
+        </form>
+        <div id="response"></div>
+    </main>
+    <footer>
+        <p>&copy; 2024 DaleGPT. All rights reserved.</p>
+    </footer>
+    <script>
+        document.getElementById('dilemmaForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const responses = {
+                dilemma1: document.getElementById('dilemma1').value,
+                dilemma2: document.getElementById('dilemma2').value,
+                dilemma3: document.getElementById('dilemma3').value,
+            };
+            const responseDiv = document.getElementById('response');
+
+            const res = await fetch('/api/virtue-ethics', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(responses),
+            });
+
+            if (res.ok) {
+                const data = await res.json();
+                // Redirect to the DaleGPT assistant page with the top values
+                window.location.href = `dale-gpt-assistant.html?values=${encodeURIComponent(data.values)}`;
+            } else {
+                responseDiv.innerText = 'Error: Unable to get a response.';
+            }
+        });
+    </script>
+</body>
+</html>
